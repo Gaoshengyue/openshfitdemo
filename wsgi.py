@@ -1,16 +1,15 @@
-"""
-WSGI config for project project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
-"""
-
 import os
+import sys
 
-from django.core.wsgi import get_wsgi_application
+os.environ['DJANGO_SETTINGS_MODULE'] = 'openshift.settings';
+sys.path.append(os.path.join(os.environ['OPENSHIFT_REPO_DIR'], 'wsgi', 'openshift'))
+virtenv = os.environ['APPDIR'] + '/virtenv/'
+os.environ['PYTHON_EGG_CACHE'] = os.path.join(virtenv, 'lib/python2.6/site-packages')
+virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
+try:
+    execfile(virtualenv, dict(__file__=virtualenv))
+except:
+    pass
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
-
-application = get_wsgi_application()
+import django.core.handlers.wsgi
+application = django.core.handlers.wsgi.WSGIHandler()
